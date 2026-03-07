@@ -1,0 +1,24 @@
+model:
+
+train:
+  cuda : true
+  gpuid: '0'
+  dataset_path: 'datasets/hilbert/ring/ring_normal_small_train'
+  pretrained: true
+  model_path: ''
+  Init_Epoch: 0
+  Epoch: 1200
+  batch_size: 16
+  Init_lr: 1.0e-2
+  Min_lr: 1.0e-4
+  optimizer_type: "adam"
+  momentum: 0.9
+  weight_decay: 0
+  lr_decay_type: 'cos'
+  save_period: 25
+  save_dir: 'trainlogs/hilbert/hilbert_GRU_ring_small_again'
+  num_workers: 4
+  backbone: 'GRUhilbert'
+  lossfunc: 'BCEWithLogitsLoss'
+  train_ratio: 0.9
+  flat_shape: 64
