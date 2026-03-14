@@ -1,4 +1,4 @@
-# PPGSiam: PPG-Based Identity Authentication
+# Ring-ID: Lightweight and Open-Set PPG Authentication for Smart Rings
 
 ![Python 3.8+](https://img.shields.io/badge/python-3.8%2B-blue)
 ![PyTorch 2.5.1](https://img.shields.io/badge/PyTorch-2.5.1%2Bcu124-orange)

@@ -1,4 +1,4 @@
-# PPGSiam: PPG-Based Identity Authentication
+# Ring-ID: Lightweight and Open-Set PPG Authentication for Smart Rings
 
 ![Python 3.8+](https://img.shields.io/badge/python-3.8%2B-blue)
 ![PyTorch 2.5.1](https://img.shields.io/badge/PyTorch-2.5.1%2Bcu124-orange)
@@ -12,7 +12,6 @@ This project implements a **PPG-based identity authentication system using a Sia
 
 - Uses a **Siamese Neural Network** for feature extraction and similarity measurement, supporting end-to-end training.
 - Supports **zero-shot authentication for new users**, enabling recognition of unseen users without retraining the model.
-- Provides **data preprocessing scripts** for the [BIDMC](https://physionet.org/content/bidmc/1.0.0/) and [CapnoBase](https://borealisdata.ca/dataset.xhtml?persistentId=doi:10.5683/SP2/NLB8IT) datasets for easy reproduction of experiments.
 
 ---
 
