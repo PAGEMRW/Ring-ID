@@ -4,104 +4,172 @@
 ![PyTorch 2.5.1](https://img.shields.io/badge/PyTorch-2.5.1%2Bcu124-orange)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-## Project Overview
+---
 
-This project implements a **PPG-based identity authentication system using a Siamese neural network**. By utilizing Photoplethysmography (PPG) signals collected from wearable devices, the model can distinguish between different users and achieve **non-contact, physiological biometric authentication**.
+## 📌 Project Overview
 
-**Main Features:**
+This project implements a **PPG-based identity authentication system using a Siamese neural network**.
 
-- Uses a **Siamese Neural Network** for feature extraction and similarity measurement, supporting end-to-end training.
-- Supports **zero-shot authentication for new users**, enabling recognition of unseen users without retraining the model.
+By leveraging Photoplethysmography (PPG) signals from wearable devices, the system enables **non-contact physiological biometric authentication**.
+
+### ✨ Key Features
+
+* 🔗 **Siamese Neural Network** for feature extraction and similarity learning
+* 🧠 **Open-set (zero-shot) authentication**, supporting unseen users
+* ⚡ **Lightweight model**
+
+  * Parameters: **0.0139M**
+  * CPU latency: **103.4 ms**
+* 📱 Suitable for **resource-constrained wearable devices**
+
+<p align="center">
+  <img src="assets/framework.jpg" width="600"/>
+</p>
 
 ---
 
-## Recommended Environment
+## 🧪 Environment Setup
 
-The project is recommended to run on **Linux** with the following environment:
+Recommended environment:
 
-- **Python** >= 3.8
-- **PyTorch** == 2.5.1+cu124
+* Python ≥ 3.8
+* PyTorch = 2.5.1 + cu124
 
-Other dependencies can be installed according to `environment.yml` (the author's full environment configuration) or based on your own system setup to avoid version conflicts.
+### Install Dependencies
 
----
-
-## Dataset Download
-
-Please download the original datasets from the following links and preprocess them according to the instructions below:
-
-- [BIDMC Dataset](https://physionet.org/content/bidmc/1.0.0/) (PhysioNet)
-- [CapnoBase Dataset](https://borealisdata.ca/dataset.xhtml?persistentId=doi:10.5683/SP2/NLB8IT) (Borealis Data)
-
----
-
-## Configuration
-
-All model and training parameters are configured in the `config.yaml` file and can be modified directly. Key parameters are explained below.
-
-### Dataset Structure
-
-The dataset folder should be organized in the following format:
-
-The structure of the `"dataset_path"` folder is as follows:
-```python
-- dataset_path
-	- character01
-		- 01.npy
-		- 02.npy
-		- ……
-	- character02
-	- character03
-	- ……
+```bash
+conda env create -f environment.yml
+# or install manually
 ```
 
-Example data has been placed in `datasets/hilbert/bidmc/train` for reference.
+---
 
-### Supported Preprocessing Methods and Model Selection
+## 📂 Dataset
 
-Depending on the signal preprocessing method, the shape of the `.npy` files in `dataset_path` and the available `backbone` options will differ:
+Download datasets from:
 
-| Preprocessing Method | Input Shape (channels, length) | Available Backbone (must be specified in `config.yaml`) | Recommended `flat_shape` |
-|----------------------|---------------------------------|----------------------------------------------------------|--------------------------|
-| **EEMD**             | (6, segment_length)             | `'Conv1D'`, `'GRU'`, `'LSTM'`, `'TCN'`                   | 64                       |
-| **Hilbert**          | (3, segment_length)             | `'Conv1Dhilbert'`, `'GRUhilbert'`, `'LSTMhilbert'`, `'TCNhilbert'` | 64 |
-| **Raw Signal**       | (1, segment_length)             | `'Conv1Dseq'`, `'GRUseq'`, `'LSTMseq'`, `'TCNseq'`       | 32                       |
+* [BIDMC Dataset](https://physionet.org/content/bidmc/1.0.0/)
+* [CapnoBase Dataset](https://borealisdata.ca/dataset.xhtml?persistentId=doi:10.5683/SP2/NLB8IT)
 
-- `segment_length` can be set in the configuration file, with a default value of **256** (it is recommended to adjust it according to the sampling rate).
-- Other hyperparameters such as **learning rate, batch size, and number of training epochs** should also be modified in `config.yaml`.
+---
 
-## Training the Model
+## ⚙️ Configuration
 
-The training procedure is as follows:
+All parameters are defined in:
 
-1. **Prepare the Data**  
-   Place the raw dataset in the `dataset_path` folder under the project root directory following the structure described above (or modify `dataset_path` in `config.yaml` to point to the actual path).
+```bash
+config.yaml
+```
 
-2. **Modify the Configuration**  
-   According to your preprocessing method and network architecture requirements, edit parameters such as `preprocess` and `backbone` in `config.yaml`.
+---
 
-3. **Start Training**  
-   Run the following command in the terminal:
+## 📁 Dataset Structure
+
+```text
+dataset_path/
+├── character01/
+│   ├── 01.npy
+│   ├── 02.npy
+│   └── ...
+├── character02/
+├── character03/
+└── ...
+```
+
+Example dataset:
+
+```bash
+datasets/hilbert/bidmc/train
+```
+
+---
+
+## 🔄 Preprocessing & Model Selection
+
+| Method     | Input Shape         | Backbone Options                                      | flat_shape |
+| ---------- | ------------------- | ----------------------------------------------------- | ---------- |
+| EEMD       | (6, segment_length) | Conv1D / GRU / LSTM / TCN                             | 64         |
+| Hilbert    | (3, segment_length) | Conv1Dhilbert / GRUhilbert / LSTMhilbert / TCNhilbert | 64         |
+| Raw Signal | (1, segment_length) | Conv1Dseq / GRUseq / LSTMseq / TCNseq                 | 32         |
+
+### Notes
+
+* `segment_length` default = **256** (adjust based on sampling rate)
+* Other hyperparameters (learning rate, batch size, epochs) are configurable in `config.yaml`
+
+---
+
+## 🚀 Training
+
+### Step 1: Prepare Data
+
+Place dataset under `dataset_path` or modify path in `config.yaml`.
+
+If using Hilbert preprocessing:
+
+```bash
+python hilbert.py
+```
+
+---
+
+### Step 2: Configure Model
+
+Edit `config.yaml`:
+
+* preprocess
+* backbone
+* training parameters
+
+---
+
+### Step 3: Start Training
 
 ```bash
 python train.py
+```
 
-## Model Evaluation
+---
 
-After training, the trained model can be used to evaluate identity authentication performance on the test dataset. This project provides an example script to compute multiple authentication metrics, including **Accuracy, Precision, Recall, F1-score, FAR, FRR, EER, AUC, and TAR@FAR=1%**, and automatically generates **ROC curves** and **DET curves**.
+## 📊 Evaluation
 
-Modify the following parameters in the evaluation script:
+After training, evaluate the model using the test dataset.
+
+### Modify parameters in evaluation script:
 
 ```python
-data_dir = "datasets/hilbert/bidmc/test"   # Test dataset path
-model_path = "path/to/your/model.pth"      # Path to the trained model weights
-output_dir = "evaluation/results"          # Directory to save evaluation results
+data_dir = "datasets/hilbert/bidmc/test"
+model_path = "path/to/your/model.pth"
+output_dir = "evaluation/results"
 
-model_name = "GRUhilbert"                  # Backbone type
+model_name = "GRUhilbert"
 flat_shape = 64
 ```
 
-## Reference
+### Supported Metrics
 
-The Siamese neural network component in this project is based on the implementation from Bubbliiiing's Siamese-PyTorch repository:  
+* Accuracy
+* Precision / Recall / F1-score
+* FAR / FRR
+* EER
+* AUC
+* TAR @ FAR = 1%
+
+### Visualization
+
+* ROC Curve
+* DET Curve
+
+---
+
+## 📚 Reference
+
+The Siamese network implementation is based on:
+
 https://github.com/bubbliiiing/Siamese-pytorch.git
+
+---
+
+## 📄 License
+
+This project is released under the MIT License.
